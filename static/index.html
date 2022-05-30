@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+    <!-- SET -->
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <!-- THIS APP -->
+    <link href="./style/common.css" rel="stylesheet" >
+    <script src="./js/common.js"></script>
+
+    <title>Mini.Blog</title>
+
+    <script>
+        $(document).ready(function () {
+            getArticles();
+
+            if(localStorage.getItem("token")) {
+                $('#btnLogin').hide();
+            }else{
+                $('#btnLogout').hide();
+            }
+        });
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">MINI BLOG</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link active" aria-current="page" href="/">글들</a>
+                <a class="nav-link" href="/login" id="btnLogin">👋 LOG IN</a>
+                <a class="nav-link" href="javascript:logOut();" id="btnLogout">👋 LOG OUT</a>
+                <div style=""></div>
+            </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container" id="indexTop">
+        <h1>💩 이건 대충대충 만든 프런트 💩</h1>
+    </div>
+
+    <div id="indexArticlePost">
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" style="width:80px;">글 제목</span>
+            <input type="text" id="articleSubject" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-text" style="width:80px;">내용</span>
+            <textarea class="form-control" id="articleContent" aria-label="With textarea" style="height:100px;"></textarea>
+        </div>
+
+        <button type="button" class="btn btn-primary" style="width: 100%; margin-top:20px;" onclick="postArticle()">올리기를 시도했다!</button>
+    </div>
+
+    <div class="container" id="indexArticleList"> 
+        ------------- Article List 👀 -------------
+    </div>
+
+    <div id="detailModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModal_articleSubject">Modal Title</h5>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: small;">작성자: <span id="detailModal_articleAuthorId">1</span> / <span id="detailModal_articlePostDate" style="color:gray">2020-11-11</span></p>
+                    <div style="width: 100%; margin-top:20px; padding: 10px; background-color: #f8f8f8; border-radius: 10px;;">
+                        <p id="detailModal_articleContent">내용내용내용</p>
+                    </div>
+                    
+                    <div style="margin-top:30px;">댓글</div>
+                    <div style="margin-top:10px; font-size:small; line-height:30px;">
+                        <ul>
+                            <li style="background-color:#f8f8f8">댓글1은 이렇게 달림</li>
+                            <li>두 번째 댓글은 이렇게 달림</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="javadcript: $('#detailModal').modal('hide');">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </body>
+</html>

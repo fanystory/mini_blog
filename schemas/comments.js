@@ -1,32 +1,31 @@
 const mongoose = require("mongoose");
 
 //------------------------------------------------------------
-//  💾 스키마: articles
+//  💾 스키마: comments
 //------------------------------------------------------------
 
-const articlesSchema = mongoose.Schema({
-    articleId:{             // 1. 게시물 번호
+const commentsSchema = mongoose.Schema({
+    commentId:{
         type: Number,
         required: true,
     },
-    articleSubject:{        // 2. 게시글 제목
+    commentTargetArticleId:{
+        type: Number,
+        required: true,
+    },
+    commentAuthorId:{
         type: String,
         required: true,
     },
-    articleContent:{        // 3. 게시글 내용
+    commentContent:{
         type: String,
         required: true,
     },
-    articleAuthorId:{       // 4. 게시글 작성자 고유 ID
-        type: String,
-        required: true,
-    },
-    articlePostDate:{       // 5. 게시글 작성 날짜
+    commentDate:{
         type: Date,
         required: true,
     },
 });
 
-
-const model = mongoose.model("Articles", articlesSchema);
+const model = mongoose.model("Comments", commentsSchema);
 module.exports = model;

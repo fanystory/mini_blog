@@ -4,29 +4,29 @@ const mongoose = require("mongoose");
 //  💾 스키마: articles
 //------------------------------------------------------------
 
-const articlesSchema = mongoose.Schema({
-    articleId:{             // 1. 게시물 번호
-        type: Number,
-        required: true,
-    },
-    articleSubject:{        // 2. 게시글 제목
+const usersSchema = mongoose.Schema({
+    userId:{
         type: String,
         required: true,
     },
-    articleContent:{        // 3. 게시글 내용
+    userPassword:{
         type: String,
         required: true,
     },
-    articleAuthorId:{       // 4. 게시글 작성자 고유 ID
+    userEmail:{
         type: String,
         required: true,
     },
-    articlePostDate:{       // 5. 게시글 작성 날짜
+    userNickname:{
+        type: String,
+        required: true,
+    },
+    userDate:{
         type: Date,
         required: true,
     },
 });
 
 
-const model = mongoose.model("Articles", articlesSchema);
+const model = mongoose.model("Users", usersSchema);
 module.exports = model;
