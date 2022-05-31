@@ -14,9 +14,10 @@ module.exports = (req, res, next) =>{
     try{
         const decoded = jwt.verify(tokenValue, "sPRta@KEy#seCrEt");
 
+
         User.findOne({ userId: decoded.userId})
         .then((user)=>{
-            res.locals.userId = user.userId;
+            res.locals.user = user;
         });
 
         //console.log("로그인된 사용자임");

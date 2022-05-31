@@ -108,27 +108,11 @@ router.post("/user", async (req, res) => {
 router.post("/auth", async (req,res) => {
     const { userId, userPassword } = req.body;
 
+    let loginUser;
     //유저 찾기
     try{
-        const loginUser = await User.findOne({ userId });
+        loginUser = await User.findOne({ userId });
 
-        //console.log(loginUser);
-
-        if(loginUser == null){
-            return res.status(400)
-                .json({
-                    "errorType":"match",
-                    "errorMessage":"ID 혹은 비밀번호가 일치하지 않음"
-                });
-        }
-
-        if(!Potato.compareSync(userPassword, loginUser.userPassword)){
-            return res.status(400)
-                    .json({
-                        "errorType":"match",
-                        "errorMessage":"ID 혹은 비밀번호가 일치하지 않음"
-                    });
-        }
     }catch(error){
         return res.status(400)
                 .json({
@@ -137,12 +121,32 @@ router.post("/auth", async (req,res) => {
                 });
     }
 
+    if(loginUser == null){
+        return res.status(400)
+            .json({
+                "errorType":"match",
+                "errorMessage":"ID 혹은 비밀번호가 일치하지 않음"
+            });
+    }
+
+    if(!Potato.compareSync(userPassword, loginUser.userPassword)){
+        return res.status(400)
+                .json({
+                    "errorType":"match",
+                    "errorMessage":"ID 혹은 비밀번호가 일치하지 않음"
+                });
+    }
+
     const token = jwt.sign({userId}, "sPRta@KEy#seCrEt");
+
+    console.log(loginUser.userNickname);
 
     res.status(200)
         .json({
             "successMessage":"로긔인 성공!",
             token,
+            userId: loginUser.userId,
+            userNickname: loginUser.userNickname,
         });
     
 });

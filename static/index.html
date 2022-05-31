@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
@@ -27,16 +28,28 @@
 
             if(localStorage.getItem("token")) {
                 $('#btnLogin').hide();
+                const userNickname = localStorage.getItem("_userNickname");
+                $('#indexTopUserArea').empty();
+                $('#indexTopUserArea').append(`${userNickname}님 로그인 ㅊㅋ 🥳`);
             }else{
                 $('#btnLogout').hide();
             }
+
+            $('#commentInput').on("keyup", function(key){
+                if(key.keyCode != 13){
+                    return;
+                }
+                postComment();
+            });
         });
+
+        
     </script>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">MINI BLOG</a>
+            <a class="navbar-brand" href="/">똥글배설센터💩</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
@@ -45,14 +58,14 @@
                 <a class="nav-link active" aria-current="page" href="/">글들</a>
                 <a class="nav-link" href="/login" id="btnLogin">👋 LOG IN</a>
                 <a class="nav-link" href="javascript:logOut();" id="btnLogout">👋 LOG OUT</a>
-                <div style=""></div>
             </div>
             </div>
         </div>
     </nav>
     
     <div class="container" id="indexTop">
-        <h1>💩 이건 대충대충 만든 프런트 💩</h1>
+        <h1>욕만 빼구 다 싸보세요! 👀</h1>
+        <span id="indexTopUserArea"></span>
     </div>
 
     <div id="indexArticlePost">
@@ -70,9 +83,10 @@
     </div>
 
     <div class="container" id="indexArticleList"> 
-        ------------- Article List 👀 -------------
+        ---------- Article List 👀 ----------
     </div>
 
+    <!-- Article Detail -->
     <div id="detailModal" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -80,22 +94,42 @@
                     <h5 class="modal-title" id="detailModal_articleSubject">Modal Title</h5>
                 </div>
                 <div class="modal-body">
-                    <p style="font-size: small;">작성자: <span id="detailModal_articleAuthorId">1</span> / <span id="detailModal_articlePostDate" style="color:gray">2020-11-11</span></p>
-                    <div style="width: 100%; margin-top:20px; padding: 10px; background-color: #f8f8f8; border-radius: 10px;;">
+                    <p style="font-size: small;">게시글 번호: <span id="detailModal_articleId"></span> / 작성자: <span id="detailModal_articleAuthorId">1</span> / <span id="detailModal_articlePostDate" style="color:gray">2020-11-11</span></p>
+                    <div style="width: 100%; margin-top:20px; padding: 10px; background-color: #f8f8f8; border-radius: 10px; line-height:30px;">
                         <p id="detailModal_articleContent">내용내용내용</p>
                     </div>
                     
                     <div style="margin-top:30px;">댓글</div>
                     <div style="margin-top:10px; font-size:small; line-height:30px;">
-                        <ul>
-                            <li style="background-color:#f8f8f8">댓글1은 이렇게 달림</li>
-                            <li>두 번째 댓글은 이렇게 달림</li>
+                        <input id="commentInput" placeholder="댓글 작성 후 엔터를 누르세요" style="width:100%" />
+                        <ul id="commentArea" style="margin-top:10px;">
+                            
                         </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="javadcript: $('#detailModal').modal('hide');">Cancel</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="javadcript: $('#detailModal').modal('hide');">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Edit -->
+    <div id="editModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <input id="editModal_articleSubject" style="width:100%" />
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: small;">게시글 번호: <span id="editModal_articleId"></span> / 작성자: <span id="editModal_articleAuthorId">1</span> / <span id="editModal_articlePostDate" style="color:gray">2020-11-11</span></p>
+                    <textarea id="editModal_articleContent" style="width:100%; height:200px"> </textarea>
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-primary" onclick="editArticle()">수정</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteArticle()">삭제</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="javadcript: $('#editModal').modal('hide');">닫기</button>
                 </div>
             </div>
         </div>

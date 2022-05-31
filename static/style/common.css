@@ -124,3 +124,16 @@
     margin-top: 7px;
     padding-left:7px;
 }
+
+.commentIdArea{
+    border: 1px soild grey;
+    background-color: antiquewhite;
+    border-radius: 2px;
+}
+
+.commentIdAreaMe{
+    border: 1px soild grey;
+    background-color: olive;
+    color: white;
+    border-radius: 2px;
+}
